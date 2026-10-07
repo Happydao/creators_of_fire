@@ -74,3 +74,6 @@ input[type=range]{margin-left:0;margin-right:0}
 @media(max-width:800px){.listening-room{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:540px){.hero h1{font-size:clamp(76px,24.35vw,95px)}.queue{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:360px){.site-header nav{gap:10px;margin-right:10px}.brand small{letter-spacing:1px}.brand{font-size:8px}.transport{gap:13px}.discovery-card em{display:none}.hero-actions .button{padding:12px;font-size:9px}}
+/* Keep native range tracks compact while making touch targets accessible. */
+input[type=range],.volume input{height:24px}
+.site-header nav a{display:inline-flex;align-items:center;min-height:28px}
