@@ -1,5 +1,5 @@
 export const PREVIEW_SECONDS = 30;
-export const FADE_OUT_SECONDS = 1.4;
+export const FADE_OUT_SECONDS = 3.5;
 /** Official player-volume envelope; audio is never captured or processed. */
 export function previewGain(time, end) {
   return Math.max(0, Math.min(1, (end - time) / FADE_OUT_SECONDS));

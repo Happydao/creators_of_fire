@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { formatPublished, isNewRelease } from '../src/catalog.js';
-import { previewGain, previewWindow } from '../src/mix.js';
+import { FADE_OUT_SECONDS, previewGain, previewWindow } from '../src/mix.js';
 import { mappedRequest, requestForm } from '../src/form-config.js';
 test('Fire Mix chooses a 30-second interior window while preserving the ending', () => {
   for (const duration of [120, 240, 400, 720]) {
@@ -28,8 +28,9 @@ test('all archived tracks have verified publication dates and the display format
   assert.equal(formatPublished(undefined), 'Date unavailable');
 });
 test('Fire Mix volume envelope stays within the official player range', () => {
-  assert.equal(previewGain(10, 30), 1);
-  assert.ok(previewGain(29, 30) < 1);
+  assert.equal(FADE_OUT_SECONDS, 3.5);
+  assert.equal(previewGain(26.5, 30), 1);
+  assert.ok(previewGain(28, 30) < 1);
   assert.equal(previewGain(30, 30), 0);
 });
 test('NEW RELEASE appears only within fourteen days of YouTube publication', () => {

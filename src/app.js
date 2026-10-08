@@ -1,7 +1,7 @@
 import { category, filterTracks, formatPublished, formatTime, isNewRelease, nextIndex, shuffled, validTrack } from './catalog.js';
 import { hydrateIcons, icon } from './icons.js';
 import { MusicPlayer } from './player.js';
-import { previewGain, previewWindow } from './mix.js';
+import { FADE_OUT_SECONDS, previewGain, previewWindow } from './mix.js';
 import { shareTrack } from './share.js';
 import './request.js';
 const $ = selector => document.querySelector(selector);
@@ -188,11 +188,12 @@ setInterval(() => {
     mixPlan = previewWindow(duration);
     if (mixPlan && time < mixPlan.start - 1) player.seek(mixPlan.start);
   }
-  if (mix && mixPlan && !mixAdvancing && player.state === 1 && time >= mixPlan.end - .25) {
+  const fadeEnd = mixPlan?.end - .25;
+  if (mix && mixPlan && !mixAdvancing && player.state === 1 && time >= fadeEnd) {
     mixAdvancing = true; const index = nextIndex(position, order.length, 'all');
     if (index >= 0) { position = index; select(order[position], { rebuild: false }); return; }
   }
-  if (mix && mixPlan && player.state === 1 && !mixAdvancing && time > mixPlan.end - 1.4) player.setTransitionGain(previewGain(time, mixPlan.end));
+  if (mix && mixPlan && player.state === 1 && !mixAdvancing && time > fadeEnd - FADE_OUT_SECONDS) player.setTransitionGain(previewGain(time, fadeEnd));
   text('#elapsed', formatTime(time)); text('#duration', formatTime(duration));
   if (document.activeElement !== $('#bar-seek')) { $('#bar-seek').max = duration || 100; $('#bar-seek').value = Math.min(time, duration || 100); text('#bar-elapsed', formatTime(time)); $('#bar-seek').style.setProperty('--played', `${duration ? Math.min(100, Math.max(0, time / duration * 100)) : 0}%`); }
   text('#bar-duration', formatTime(duration)); $('#bar-seek').setAttribute('aria-valuetext', `${formatTime(time)} of ${formatTime(duration)}`);
