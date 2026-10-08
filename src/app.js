@@ -1,6 +1,9 @@
 import { category, filterTracks, formatTime, nextIndex, shuffled, validTrack } from './catalog.js';
 import { hydrateIcons, icon } from './icons.js';
 import { MusicPlayer } from './player.js';
+import { previewWindow } from './mix.js';
+import { shareTrack } from './share.js';
+import './request.js';
 const $ = selector => document.querySelector(selector);
 const text = (selector, value) => { $(selector).textContent = value; };
 const escape = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
@@ -10,7 +13,7 @@ const storedSaved = readStored('cof-saved', []);
 const saved = new Set(Array.isArray(storedSaved) ? storedSaved.filter(id => typeof id === 'string') : []);
 let tracks = [], trackMap = new Map(), order = [], position = 0, current;
 let filter = 'All', limit = 12, repeat = 'off', shuffle = false, mix = false;
-let started = false, inView = true, dockDismissed = false, hasError = false, loading = false, loadRequest = 0;
+let started = false, hasError = false, loading = false, loadRequest = 0, mixPlan = null, mixAdvancing = false;
 let toastTimer, liveAnnounce;
 hydrateIcons();
 text('#year', new Date().getFullYear());
@@ -23,9 +26,9 @@ const player = new MusicPlayer({
     const playing = state === 1;
     ['#play', '#bar-play'].forEach(selector => { $(selector).innerHTML = icon(playing ? 'pause' : 'play'); $(selector).setAttribute('aria-label', playing ? 'Pause' : 'Play'); });
     text('#playback-state', ({ 1: 'SIGNAL ACTIVE', 2: 'PAUSED', 3: 'CONNECTING', 0: 'TRACK ENDED', 5: 'READY TO PLAY' })[state] || 'READY TO IGNITE');
-    if (state === 1) { hasError = false; message(mix ? 'Fire Mix · 10-second previews. Keep playing to hear the full track.' : 'Playing through the official YouTube player.'); }
+    if (state === 1) { hasError = false; message(mix ? 'Fire Mix · 30-second discovery from within each track.' : 'Playing through the official YouTube player.'); }
     if (state === 2 && document.hidden) message('Paused while this tab is hidden. Press play to continue.');
-    updateDock();
+    updateNowBar();
   },
   onEnd: () => {
     if (loading || hasError || document.hidden) return;
@@ -40,13 +43,7 @@ const player = new MusicPlayer({
 const initialVolume = Number(readStored('cof-volume', 75));
 player.setVolume(Number.isFinite(initialVolume) ? Math.max(0, Math.min(100, initialVolume)) : 75);
 $('#volume').value = player.volume;
-function updateDock() {
-  const show = started && !inView && !dockDismissed;
-  $('#video-surface').classList.toggle('docked', show);
-  $('#close-dock').hidden = !show;
-  $('#now-bar').hidden = !started;
-}
-new IntersectionObserver(entries => { inView = entries[0].isIntersecting; updateDock(); }, { threshold: 0.45 }).observe($('#video-slot'));
+function updateNowBar() { $('#now-bar').hidden = !started; }
 function updateCurrent() {
   if (!current) return;
   text('#now-title', current.title); text('#bar-title', current.title);
@@ -65,7 +62,7 @@ function renderQueue() {
 }
 function setMix(value) {
   mix = value; $('#mix-status').hidden = !mix;
-  text('#device-mode', mix ? '10-SECOND PREVIEW' : 'FULL TRACK');
+  text('#device-mode', mix ? '30-SECOND PREVIEW' : 'FULL TRACK');
   $('#progress').disabled = mix || !player.ready || hasError;
   $('#fire-mix').setAttribute('aria-pressed', mix);
 }
@@ -76,12 +73,13 @@ function setShuffle(value) {
 async function select(id, { rebuild = true, scroll = false } = {}) {
   if (!trackMap.has(id)) return;
   const request = ++loadRequest;
-  current = trackMap.get(id); hasError = false; loading = true; dockDismissed = false;
+  current = trackMap.get(id); hasError = false; loading = true;
   if (rebuild) { order = shuffle ? shuffled(tracks.map(t => t.id), id) : tracks.map(t => t.id); position = order.indexOf(id); }
-  started = true; updateCurrent(); updateDock(); message('Connecting to YouTube…');
+  mixPlan = mix ? previewWindow(current.duration) : null; mixAdvancing = false;
+  started = true; updateCurrent(); updateNowBar(); message('Connecting to YouTube…');
   if (scroll) $('#listen').scrollIntoView({ behavior: 'smooth' });
   $('#listen').classList.remove('igniting'); requestAnimationFrame(() => $('#listen').classList.add('igniting'));
-  try { await player.load(id, mix); if (request === loadRequest) $('#progress').disabled = mix; }
+  try { await player.load(id, mix && Boolean(mixPlan), mixPlan?.start || 0, true, mixPlan?.length || 30); if (request === loadRequest) $('#progress').disabled = mix; }
   catch (error) { if (request === loadRequest) { hasError = true; message(error.message); text('#playback-state', 'CONNECTION UNAVAILABLE'); } }
   finally { if (request === loadRequest) loading = false; }
 }
@@ -89,7 +87,7 @@ async function togglePlay() {
   if (!current) return;
   if (!started || hasError || !player.ready) { await select(current.id, { rebuild: false }); return; }
   if (player.state === 1) player.pause();
-  else { dockDismissed = false; updateDock(); player.play(); }
+  else player.play();
 }
 function skip(direction) {
   if (!current) return;
@@ -138,13 +136,13 @@ $('#repeat').onclick = () => { repeat = ({ off: 'all', all: 'one', one: 'off' })
 $('#fire-mix').onclick = () => {
   if (!tracks.length) return;
   setMix(true); setShuffle(true); order = shuffled(tracks.map(t => t.id)); position = 0;
-  select(order[0], { rebuild: false, scroll: true }); toast('Fire Mix on · 10-second previews.');
+  select(order[0], { rebuild: false, scroll: true }); toast('Fire Mix on · 30-second previews.');
 };
 $('#keep-track').onclick = () => { const time = player.time; setMix(false); player.load(current.id, false, time).catch(error => message(error.message)); toast('This one stays. Full track playing.'); };
 $('#stop-mix').onclick = () => { setMix(false); player.pause(); player.load(current.id, false, player.time, false).catch(error => message(error.message)); message('Fire Mix stopped. Press play for the full track.'); };
 $('#progress').oninput = event => { if (!mix) { player.seek(Number(event.target.value)); text('#elapsed', formatTime(Number(event.target.value))); } };
 $('#volume').oninput = event => { const value = Number(event.target.value); player.setVolume(value); store('cof-volume', value); };
-$('#close-dock').onclick = () => { player.pause(); dockDismissed = true; updateDock(); };
+$('#share-track').onclick = () => shareTrack(current);
 $('#search').oninput = () => { clearTimeout(liveAnnounce); liveAnnounce = setTimeout(() => { limit = 12; renderLibrary(); }, 120); };
 document.querySelectorAll('[data-filter]').forEach(button => { button.onclick = () => { filter = button.dataset.filter; limit = 12; document.querySelectorAll('[data-filter]').forEach(b => { b.classList.toggle('active', b === button); b.setAttribute('aria-pressed', b === button); }); renderLibrary(); }; });
 $('#reset-filters').onclick = () => { $('#search').value = ''; $('[data-filter="All"]').click(); };
@@ -153,9 +151,19 @@ $('#load-more').onclick = () => { limit += 12; renderLibrary(); };
 setInterval(() => {
   if (!player.ready || document.hidden || !current) return;
   const time = player.time, duration = player.duration || current.duration;
+  if (mix && !mixPlan && duration > 0 && player.state === 1) {
+    mixPlan = previewWindow(duration);
+    if (mixPlan && time < mixPlan.start - 1) player.seek(mixPlan.start);
+  }
+  if (mix && mixPlan && !mixAdvancing && player.state === 1 && time >= mixPlan.end - .25) {
+    mixAdvancing = true; const index = nextIndex(position, order.length, 'all');
+    if (index >= 0) { position = index; select(order[position], { rebuild: false }); return; }
+  }
   text('#elapsed', formatTime(time)); text('#duration', formatTime(duration));
   if (document.activeElement !== $('#progress')) { $('#progress').max = duration || 100; $('#progress').value = Math.min(time, duration); }
   $('#progress').setAttribute('aria-valuetext', `${formatTime(time)} of ${formatTime(duration)}`);
+  const barPercent = duration ? Math.min(100, Math.max(0, time / duration * 100)) : 0;
+  $('#bar-progress').style.width = `${barPercent}%`; $('#bar-progress').setAttribute('aria-valuenow', String(Math.round(barPercent)));
 }, 400);
 async function initialize() {
   try {
@@ -174,8 +182,14 @@ async function initialize() {
   try {
     const response = await fetch(new URL('../data/platforms.json', import.meta.url));
     if (!response.ok) return;
-    const platforms = (await response.json()).filter(p => p.verified && typeof p.url === 'string' && p.url.startsWith('https://'));
-    if (platforms.length) $('#platforms').innerHTML = platforms.map(p => `<a class="platform" href="${escape(p.url)}" target="_blank" rel="noopener noreferrer"><span>${icon(p.icon)}</span><span><b>${escape(p.name)}</b><small>${escape(p.label || 'Official artist profile')}</small></span><span>↗</span></a>`).join('');
-  } catch { /* Keep the verified static YouTube link. */ }
+    const platforms = await response.json();
+    const allowed = new Set(['spotify', 'applemusic', 'amazonmusic', 'youtubemusic', 'deezer', 'tidal']);
+    $('#platforms').innerHTML = platforms.filter(p => allowed.has(p.icon)).map(p => {
+      const verified = p.verified && typeof p.url === 'string' && /^https:\/\//.test(p.url);
+      const tag = verified ? 'a' : 'div';
+      const attrs = verified ? `href="${escape(p.url)}" target="_blank" rel="noopener noreferrer"` : `aria-label="${escape(p.name)}: availability varies; no verified profile link"`;
+      return `<${tag} class="stream-tile ${verified ? 'verified' : ''}" ${attrs}><span class="stream-icon"><img src="./assets/platforms/${p.icon}.svg" alt="" width="48" height="48"></span><strong>${escape(p.name)}</strong><small>${verified ? 'OFFICIAL PROFILE ↗' : 'STREAMING PLATFORM'}</small></${tag}>`;
+    }).join('');
+  } catch { /* Keep the static platform preview if the data file is unavailable. */ }
 }
 initialize();

@@ -54,12 +54,12 @@ export class MusicPlayer {
     })();
     try { await this.initializing; } catch (error) { this.initializing = null; if (!this.ready && this.instance) { this.instance.destroy(); const host = document.createElement('div'); host.id = 'youtube-player'; document.querySelector('#video-surface').prepend(host); } throw error; }
   }
-  async load(id, mix = false, start = 0, autoplay = true) {
+  async load(id, mix = false, start = 0, autoplay = true, length = 30) {
     const request = ++this.request;
     await this.ensure();
     if (request !== this.request) return;
     const options = { videoId: id, startSeconds: start };
-    if (mix) options.endSeconds = start + 10;
+    if (mix) options.endSeconds = start + length;
     if (document.hidden || !autoplay) this.instance.cueVideoById(options);
     else this.instance.loadVideoById(options);
   }

@@ -13,6 +13,8 @@ const paths = {
   list: '<path d="M9 5h12M9 12h12M9 19h12M3 5h1M3 12h1M3 19h1"/>',
   wave: '<path d="M3 10v4M7 6v12M12 2v20M17 6v12M21 10v4"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  share: '<path d="M18 8a3 3 0 1 0-2.7-4.3L8.7 7.5A3 3 0 1 0 9 12l6.2 3.6a3 3 0 1 0 1-1.7L9.8 10a3 3 0 0 0 0-1l6.4-3.7"/>',
+  spark: '<path d="M12 2c1 5-5 6-4 11 1-1 2-2 2-4 6 4 8 11 3 13-6 2-11-3-9-9 1-5 6-7 8-11Z"/><path d="m20 3 .7 1.3L22 5l-1.3.7L20 7l-.7-1.3L18 5l1.3-.7Z"/>',
   link: '<path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l2-2"/>'
 };
 export const icon = name => `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name] || paths.link}</svg>`;

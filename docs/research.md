@@ -1,4 +1,4 @@
-# Artist research — 7 October 2026
+# Artist research — updated 8 October 2026
 
 ## Verified primary source
 
@@ -16,9 +16,9 @@ The initial catalog was transcribed from public uploads metadata (titles, IDs, d
 
 ## Platform verification
 
-Exact-name, handle, title and distributor searches were performed for Creators of Fire / AI Sound CF / AISoundCF across Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, Tidal, SoundCloud and DistroKid HyperFollow. The returned indexed results did not provide an artist-owned cross-link or a confident matching catalog. Similar names and irrelevant results were excluded. Search absence is not proof that artist profiles do not exist.
+The project owner supplied the [official Spotify artist page](https://open.spotify.com/intl-it/artist/2A4wnASeDhlk5DYjnZjWGE). The [Apple Music artist page](https://music.apple.com/us/artist/creators-of-fire/1896547128) was confirmed by matching several distinct Creators of Fire release titles against the YouTube catalog. Similar names and irrelevant results were excluded. The other major music services are presented as distribution-presence marks only, without fabricated links. Availability can vary by release and region; search absence is not proof that a profile does not exist.
 
-Only the official YouTube channel is linked. `data/platforms.json` records evidence. Owner-provided DistroKid HyperFollow/profile URLs can be verified and added later.
+`data/platforms.json` records the clickable-link distinction and evidence. Owner-provided DistroKid HyperFollow/profile URLs can be verified and added later.
 
 ## Playback sources and decisions
 
@@ -30,4 +30,8 @@ Only the official YouTube channel is linked. `data/platforms.json` records evide
 
 The API documents start/end segments, play/pause, volume, seek, duration, playback states and autoplay-blocked events. Fire Mix uses these functions with a visible, unmodified native player. Interpretation: a user-requested sequence of visible short previews is technically achievable without audio extraction. This is an implementation based on the published API, not a claim of YouTube certification or policy pre-approval.
 
-The design preserves native controls and ads, docks the visible player rather than hiding it, pauses on tab visibility changes and offers direct watch links for restricted videos. It uses user-directed discovery and artist-specific editorial context rather than presenting a general YouTube clone.
+The design preserves native controls and ads, keeps one main player in its normal section, pauses on tab visibility changes, and offers direct watch links for restricted videos. The compact Now Playing bar stays on screen during scrolling; the video is never duplicated or detached into a floating card. It uses user-directed discovery and artist-specific editorial context rather than presenting a general YouTube clone.
+
+## Existing Google Form
+
+The project owner supplied the published Italian song-request Form. Its eight questions, exact option values, required status, consent and `entry.*` IDs were inspected on 8 October 2026 and are documented in `src/form-config.js`. A clearly marked test POST to its published `/formResponse` endpoint returned HTTP 200 and the Form's Italian confirmation page. This verifies Google Forms accepted that test response; the linked private Google Sheet was not accessed. The site uses English display labels with exact Italian submission values and no Google credentials.

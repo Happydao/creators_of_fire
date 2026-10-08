@@ -4,7 +4,7 @@ The official artist experience for [Creators of Fire / @AISoundCF](https://www.y
 
 **Website:** https://happydao.github.io/creators_of_fire/
 
-Dark editorial design built around the artist's original hooded creator/robot artwork. Includes the verified 121-video launch catalog, a visible YouTube player, Fire Shuffle, experimental Fire Mix, queue, progress, volume, repeat, search, editorial genre filters, grid/list views, and locally saved favorites.
+Dark editorial design built around the artist's original hooded creator/robot artwork. Includes the verified 121-video launch catalog, a visible YouTube player, Fire Shuffle, 30-second Fire Mix, queue, progress, volume, repeat, search, editorial genre filters, grid/list views, locally saved favorites, sharing, and an on-site track request form.
 
 ## Local development
 
@@ -34,7 +34,11 @@ A static HTML/CSS/ES-module site, without a frontend framework, paid backend, or
 | `src/catalog.js` | Catalog validation, filtering, queue boundaries, shuffle |
 | `data/catalog.json` | Generated track metadata; actual media remains on YouTube |
 | `data/artist.json` | Verified channel identity and artwork references |
-| `data/platforms.json` | Verified streaming/profile links rendered by the site |
+| `data/platforms.json` | Six streaming-presence tiles; only verified artist profiles are clickable |
+| `src/mix.js` | Duration-based, interior Fire Mix preview selection |
+| `src/share.js` | Native sharing, accessible desktop fallback, and track sharing |
+| `src/form-config.js` | Inspected Italian Google Form schema and English-to-Italian option mapping |
+| `src/request.js` | English request modal, validation, anti-spam, and Google Forms submission |
 | `assets/` | Artist-provided public channel imagery, original SVG favicon, licensed fonts |
 | `scripts/sync_catalog.py` | Official Atom/oEmbed or Data API synchronization |
 | `.github/workflows/pages.yml` | Scheduled sync, validation, build and Pages deployment |
@@ -84,10 +88,10 @@ Playback uses the supported [YouTube IFrame Player API](https://developers.googl
 
 - No media downloads, audio extraction, proxying, re-hosting, Web Audio interception, crossfading, or hidden audio player.
 - The actual video is visible with YouTube controls, links, branding, and ads intact. Controls outside the frame call documented API methods.
-- The video viewport remains at least **200 × 200 px**. While browsing, the same frame docks above the now-playing bar; closing it pauses playback. Hiding the browser tab pauses playback. Returning does not auto-resume.
+- The main video remains in its normal player section. Scrolling shows only the compact bottom Now Playing bar; no second or floating video player is created. Hiding the browser tab pauses playback. Returning does not auto-resume. Browser and YouTube playback restrictions can still interrupt an off-screen video.
 - The API and iframe load only after a user chooses playback. Thumbnail requests occur while browsing; see the privacy page.
 - Fire Shuffle randomly selects a different track and creates a shuffled queue.
-- Fire Mix is explicit opt-in. It uses `loadVideoById({videoId, startSeconds:0, endSeconds:10})`, then advances on the official `ENDED` event. **Keep playing** reloads the same video at its current time without the preview end limit. **Stop** cues the full track without autoplay.
+- Fire Mix is explicit opt-in. For tracks with a known duration it selects an interior start at approximately 25–40% of the track, keeps an ending margin, and requests about 30 seconds through `loadVideoById({videoId, startSeconds, endSeconds})`. Short tracks use a shorter safe window. For new RSS tracks without known durations, it waits for the official player to report the duration, then seeks into the interior. The `ENDED` event and a time check advance the queue. **Keep playing** reloads the same video at its current time without the preview end limit. **Stop** cues the full track without autoplay.
 - Native YouTube seeking remains available. Custom seeking is disabled during Fire Mix because YouTube documents that seeking cancels `endSeconds`.
 - Timing is approximate due to buffering, keyframes, advertisements, and browser autoplay policies. Ads are never inspected, suppressed, or skipped. There is no promise of seamless DJ mixing.
 - Autoplay blocking shows an explicit instruction to press the visible video player's Play control. Unavailable embeds display a direct YouTube fallback. Mobile OSes may reserve volume control for hardware buttons.
@@ -95,9 +99,21 @@ Playback uses the supported [YouTube IFrame Player API](https://developers.googl
 
 ## Streaming platform links
 
-Edit `data/platforms.json`. Only entries with `verified: true` and an HTTPS URL render. Include an evidence note and verification date for each addition. Currently only the user-supplied official YouTube channel is verified. Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, Tidal, and SoundCloud searches did not establish a reliable matching artist page; no guessed URLs or inactive logo placeholders are published.
+The six prominent tiles are Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, and TIDAL. Their presence communicates the major distribution ecosystem; availability can vary by release and region. **Only verified artist pages are links.** Edit `data/platforms.json` to add an HTTPS `url`, `verified: true`, evidence, and a verification date. Spotify is the owner-supplied official artist page. Apple Music was verified against multiple distinct catalog titles. The other four are intentionally non-clickable until their Creators of Fire pages are verified; no generic search URLs are used.
 
-A DistroKid HyperFollow link or an artist-owned profile cross-link is the best way to resolve the missing platform identities. The icons module currently includes YouTube; add the appropriate official platform icon in `src/icons.js` when a new profile is verified (unknown icon names safely use a link icon).
+Platform icons live in `assets/platforms/`; see attribution below. An artist-owned profile cross-link or multiple uniquely matching releases are useful evidence for future links.
+
+## Share the Fire
+
+The site share button uses the browser's Web Share API when available. Otherwise an accessible dialog offers Copy Link, Facebook, X, WhatsApp, Telegram, and Email. The selected track has its own share button with the official YouTube watch URL. Share metadata and the absolute preview image URL are in `index.html`; preview caches on external social services can take time to refresh.
+
+## Create Your Track
+
+The English on-site modal posts to the **existing Italian Google Form**. The form and its linked Sheet are unchanged. The public form's questions, required fields, option values, consent text, and `entry.*` IDs were inspected on 8 October 2026 and centralized in `src/form-config.js`. English labels and choices map to the exact Italian values Google Forms expects, including its `__other_option__` mechanism. Required fields, optional email format, consent, a honeypot, pending-button lock, and a 30-second repeat cooldown are handled by `src/request.js`.
+
+Submission is a native POST to the published `/formResponse` endpoint targeting a hidden iframe. GitHub Pages cannot read the cross-origin response or the private Sheet because Google Forms does not expose a CORS-readable submission result. The UI distinguishes an iframe response from a verified Sheet entry, and reports timeout/network uncertainty rather than asserting that a row exists. A clearly marked test request received HTTP 200 and the Form's Italian confirmation page; the private Sheet row was not inspected. The visible interface remains English, including the faithful translation of the existing terms. No Google credentials or Sheet access are present in the site.
+
+If the Form owner edits questions, choices, or required status, re-inspect the published Form and update `src/form-config.js` and the request modal together. A future Form ID or `entry.*` change requires a corresponding code update.
 
 ## Manual content changes
 
@@ -111,8 +127,8 @@ A DistroKid HyperFollow link or an artist-owned profile cross-link is the best w
 
 ## Checks
 
-Node tests cover catalog integrity, no-repeat shuffle, queue boundaries, search/saved filtering, and duration formatting. Python tests cover feed ownership, safe history merge, shortened channel-ID handling, and duration parsing. Before a release, also inspect desktop/tablet/mobile layouts, keyboard controls, real embed playback, autoplay/error states, Fire Mix advancement, and the `/creators_of_fire/` build path. Do not claim a Lighthouse score without running an audit.
+Node tests cover catalog integrity, no-repeat shuffle, queue boundaries, search/saved filtering, duration formatting, Fire Mix windows, and request mapping. Python tests cover feed ownership, safe history merge, shortened channel-ID handling, and duration parsing. Before a release, also inspect desktop/tablet/mobile layouts, keyboard controls, real embed playback, autoplay/error states, Fire Mix advancement, form handling, and the `/creators_of_fire/` build path. Do not claim a Lighthouse score without running an audit.
 
 ## Rights and attribution
 
-Artist artwork comes from the user-specified official channel and is used for this artist website at the project owner's request. Track thumbnails remain hosted by YouTube and videos retain their original titles and attribution. No rights to third-party material appearing in videos are asserted. Barlow Condensed and DM Sans are self-hosted under their included SIL Open Font Licenses in `assets/fonts/`.
+Artist artwork comes from the user-specified official channel and is used for this artist website at the project owner's request. Track thumbnails remain hosted by YouTube and videos retain their original titles and attribution. No rights to third-party material appearing in videos are asserted. Platform SVG marks come from [Simple Icons](https://simpleicons.org/) (CC0); names and marks belong to their respective owners. Barlow Condensed and DM Sans are self-hosted under their included SIL Open Font Licenses in `assets/fonts/`.

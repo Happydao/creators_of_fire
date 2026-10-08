@@ -1,3 +1,8 @@
 [
-  {"name":"YouTube", "icon":"youtube", "url":"https://www.youtube.com/@AISoundCF", "label":"The home of every release", "verified":true, "evidence":"Artist channel supplied by project owner; channel ID UCebUIqV2bAL9L2e_apvQSFw", "verifiedAt":"2026-10-07"}
+  {"name":"Spotify","icon":"spotify","verified":true,"url":"https://open.spotify.com/intl-it/artist/2A4wnASeDhlk5DYjnZjWGE","evidence":"Artist URL supplied by project owner; Spotify lists La Pecora fa Bruh, BE PHANTOM and Destruction theme (Radio Edit), matching Creators of Fire releases","verifiedAt":"2026-10-08"},
+  {"name":"Apple Music","icon":"applemusic","verified":true,"url":"https://music.apple.com/us/artist/creators-of-fire/1896547128","evidence":"Apple's public artist catalog contains Destructive Area I, La Pecora fa Bruh, DANCE and BE PHANTOM, matching the YouTube catalog","verifiedAt":"2026-10-08"},
+  {"name":"Amazon Music","icon":"amazonmusic","verified":false},
+  {"name":"YouTube Music","icon":"youtubemusic","verified":false},
+  {"name":"Deezer","icon":"deezer","verified":false},
+  {"name":"TIDAL","icon":"tidal","verified":false}
 ]
