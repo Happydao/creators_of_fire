@@ -4,7 +4,7 @@ The official artist experience for [Creators of Fire / @AISoundCF](https://www.y
 
 **Website:** https://happydao.github.io/creators_of_fire/
 
-Dark editorial design built around the artist's original hooded creator/robot artwork. Includes the verified 121-video launch catalog, a visible YouTube player, Fire Shuffle, 30-second Fire Mix, queue, progress, volume, repeat, search, editorial genre filters, grid/list views, locally saved favorites, sharing, and an on-site track request form.
+Dark editorial design built around the artist's original hooded creator/robot artwork. Includes the verified 121-video launch catalog, a visible YouTube player, Fire Shuffle, 30-second Fire Mix, queue, progress, volume, repeat, search, editorial genre filters, grid/list views, locally saved favorites, sharing, and an on-site track request form. The queue normally follows newest uploads first; Shuffle changes its order. A **NEW RELEASE** badge appears for uploads less than 14 days old.
 
 ## Local development
 
@@ -34,13 +34,14 @@ A static HTML/CSS/ES-module site, without a frontend framework, paid backend, or
 | `src/catalog.js` | Catalog validation, filtering, queue boundaries, shuffle |
 | `data/catalog.json` | Generated track metadata; actual media remains on YouTube |
 | `data/artist.json` | Verified channel identity and artwork references |
-| `data/platforms.json` | Six streaming-presence tiles; only verified artist profiles are clickable |
+| `data/platforms.json` | Six visual streaming-presence tiles and separately recorded verification evidence |
 | `src/mix.js` | Duration-based, interior Fire Mix preview selection |
 | `src/share.js` | Native sharing, accessible desktop fallback, and track sharing |
 | `src/form-config.js` | Inspected Italian Google Form schema and English-to-Italian option mapping |
 | `src/request.js` | English request modal, validation, anti-spam, and Google Forms submission |
 | `assets/` | Artist-provided public channel imagery, original SVG favicon, licensed fonts |
 | `scripts/sync_catalog.py` | Official Atom/oEmbed or Data API synchronization |
+| `scripts/backfill_dates.py` | One-time historical publication-date repair from public watch-page metadata |
 | `.github/workflows/pages.yml` | Scheduled sync, validation, build and Pages deployment |
 | `privacy.html` | YouTube disclosures and local-preference deletion |
 | `docs/research.md` | Source provenance, platform verification and design decisions |
@@ -68,6 +69,8 @@ The public [YouTube Atom feed](https://www.youtube.com/feeds/videos.xml?channel_
 
 **Limitations:** RSS is a recent window, not a complete archive. If more than its window of uploads appear between successful runs, older missed videos require the full API sync below. RSS/oEmbed don't supply duration; new lengths appear when the YouTube player loads a track. Removed/private/non-embeddable older entries may disappear during oEmbed verification. Feed failures never erase the catalog. This mode does not use page scraping or undocumented YouTube endpoints.
 
+All 121 existing tracks now have `publishedAt`. The newest dates came from Atom; a one-time historical backfill read public watch-page date metadata for older tracks and checked each channel ID. New uploads continue to receive dates automatically from Atom (or the optional Data API). `scripts/backfill_dates.py` is kept only for a future legacy-data repair; it is not part of the scheduled sync.
+
 ```sh
 npm run sync
 npm test
@@ -91,15 +94,16 @@ Playback uses the supported [YouTube IFrame Player API](https://developers.googl
 - The main video remains in its normal player section. Scrolling shows only the compact bottom Now Playing bar; no second or floating video player is created. Hiding the browser tab pauses playback. Returning does not auto-resume. Browser and YouTube playback restrictions can still interrupt an off-screen video.
 - The API and iframe load only after a user chooses playback. Thumbnail requests occur while browsing; see the privacy page.
 - Fire Shuffle randomly selects a different track and creates a shuffled queue.
-- Fire Mix is explicit opt-in. For tracks with a known duration it selects an interior start at approximately 25–40% of the track, keeps an ending margin, and requests about 30 seconds through `loadVideoById({videoId, startSeconds, endSeconds})`. Short tracks use a shorter safe window. For new RSS tracks without known durations, it waits for the official player to report the duration, then seeks into the interior. The `ENDED` event and a time check advance the queue. **Keep playing** reloads the same video at its current time without the preview end limit. **Stop** cues the full track without autoplay.
-- Native YouTube seeking remains available. Custom seeking is disabled during Fire Mix because YouTube documents that seeking cancels `endSeconds`.
+- Fire Mix is explicit opt-in. For tracks with a known duration it selects an interior start at approximately 25–40% of the track, keeps an ending margin, and requests about 30 seconds through `loadVideoById({videoId, startSeconds, endSeconds})`. Short tracks use a shorter safe window. For new RSS tracks without known durations, it waits for the official player to report the duration, then seeks into the interior. The `ENDED` event and a time check advance the queue. A brief fade uses the official IFrame API's `setVolume` method on the **single** visible player; no audio capture, distortion, or simultaneous crossfade is used. Mobile browsers can limit scripted volume changes, so a subtle visual transition accompanies the change. **Keep playing** reloads the same video at its current time without the preview end limit. **Stop** cues the full track without autoplay.
+- Native YouTube seeking remains available. The main and bottom-player seek bars work in full-track mode; custom seeking is disabled during Fire Mix because YouTube documents that seeking cancels `endSeconds`.
 - Timing is approximate due to buffering, keyframes, advertisements, and browser autoplay policies. Ads are never inspected, suppressed, or skipped. There is no promise of seamless DJ mixing.
 - Autoplay blocking shows an explicit instruction to press the visible video player's Play control. Unavailable embeds display a direct YouTube fallback. Mobile OSes may reserve volume control for hardware buttons.
 - Decorative energy effects follow playback state; they are not advertised as analysis of the underlying audio.
+- The compact player has a small animated energy motif on its artwork. It runs only while the official player reports playback, pauses with playback, and becomes static under reduced-motion preferences. It is decorative, not BPM analysis or a captured audio waveform.
 
-## Streaming platform links
+## Streaming presence
 
-The six prominent tiles are Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, and TIDAL. Their presence communicates the major distribution ecosystem; availability can vary by release and region. **Only verified artist pages are links.** Edit `data/platforms.json` to add an HTTPS `url`, `verified: true`, evidence, and a verification date. Spotify is the owner-supplied official artist page. Apple Music was verified against multiple distinct catalog titles. The other four are intentionally non-clickable until their Creators of Fire pages are verified; no generic search URLs are used.
+The six prominent tiles are Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, and TIDAL. They are all **visual, non-clickable** marks at the owner's request, communicating the broader distribution ecosystem; availability can vary by release and region. `data/platforms.json` retains separately verified Spotify and Apple Music URLs for maintainers, but the section does not turn them into profile links or generic searches.
 
 Platform icons live in `assets/platforms/`; see attribution below. An artist-owned profile cross-link or multiple uniquely matching releases are useful evidence for future links.
 
@@ -121,7 +125,7 @@ If the Form owner edits questions, choices, or required status, re-inspect the p
 - Platform links: `data/platforms.json`.
 - Verified source identity: `data/artist.json`.
 - Channel artwork: `assets/avatar.jpg` and `assets/banner.jpg`.
-- Catalog corrections: edit `data/catalog.json`, keeping valid 11-character YouTube IDs, original titles, `https://www.youtube.com/watch?v=ID`, and YouTube thumbnail URLs. Duration is optional and measured in seconds. Future syncs refresh source metadata, so permanent editorial content should be kept separately.
+- Catalog corrections: edit `data/catalog.json`, keeping valid 11-character YouTube IDs, original titles, `https://www.youtube.com/watch?v=ID`, YouTube thumbnail URLs, and verified `publishedAt` timestamps. Duration is optional and measured in seconds. Future syncs refresh source metadata, so permanent editorial content should be kept separately.
 - Genre filters are site editorial labels derived from explicit words in original video titles; they are not YouTube category metadata. Unknown styles remain under **All tracks** / **Beyond genres**.
 - Favorites and volume live only in browser local storage. The privacy page can clear them.
 

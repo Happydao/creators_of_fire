@@ -1,4 +1,9 @@
 export const PREVIEW_SECONDS = 30;
+export const FADE_OUT_SECONDS = 1.4;
+/** Official player-volume envelope; audio is never captured or processed. */
+export function previewGain(time, end) {
+  return Math.max(0, Math.min(1, (end - time) / FADE_OUT_SECONDS));
+}
 /** Pick an interior excerpt while leaving room at the end. Unknown durations return null. */
 export function previewWindow(duration, random = Math.random) {
   if (!Number.isFinite(duration) || duration <= 0) return null;

@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { previewWindow } from '../src/mix.js';
+import { readFileSync } from 'node:fs';
+import { formatPublished, isNewRelease } from '../src/catalog.js';
+import { previewGain, previewWindow } from '../src/mix.js';
 import { mappedRequest, requestForm } from '../src/form-config.js';
 test('Fire Mix chooses a 30-second interior window while preserving the ending', () => {
   for (const duration of [120, 240, 400, 720]) {
@@ -18,6 +20,23 @@ test('short tracks receive a bounded preview; unknown duration defers calculatio
     assert.ok(w.start >= 0 && w.end < duration && w.length <= 30);
   }
   assert.equal(previewWindow(0), null);
+});
+test('all archived tracks have verified publication dates and the display formats them', () => {
+  const catalog = JSON.parse(readFileSync(new URL('../data/catalog.json', import.meta.url)));
+  assert.equal(catalog.tracks.filter(track => track.publishedAt).length, catalog.tracks.length);
+  assert.equal(formatPublished('2026-09-24T13:05:13+00:00'), 'Sep 24, 2026');
+  assert.equal(formatPublished(undefined), 'Date unavailable');
+});
+test('Fire Mix volume envelope stays within the official player range', () => {
+  assert.equal(previewGain(10, 30), 1);
+  assert.ok(previewGain(29, 30) < 1);
+  assert.equal(previewGain(30, 30), 0);
+});
+test('NEW RELEASE appears only within fourteen days of YouTube publication', () => {
+  const now = Date.parse('2026-10-08T08:00:00Z');
+  assert.equal(isNewRelease('2026-09-24T13:05:13Z', now), true);
+  assert.equal(isNewRelease('2026-09-23T08:00:00Z', now), false);
+  assert.equal(isNewRelease('2026-10-09T08:00:00Z', now), false);
 });
 test('English choices map to the exact published Italian Form values and entry IDs', () => {
   const params = mappedRequest({name:'Test artist', email:'', title:'', instrumental:'No, con testo',genre:'__other_option__',otherGenre:'Ambient folk',mood:'Oscura',description:'Test description',consent:'on'});

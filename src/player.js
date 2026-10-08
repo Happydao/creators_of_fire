@@ -17,7 +17,7 @@ function loadAPI() {
 export class MusicPlayer {
   constructor({ onState, onEnd, onError, onReady, onBlocked }) {
     this.callbacks = { onState, onEnd, onError, onReady, onBlocked };
-    this.ready = false; this.volume = 75; this.request = 0; this.state = -1;
+    this.ready = false; this.volume = 75; this.transitionGain = 1; this.request = 0; this.state = -1;
     document.addEventListener('visibilitychange', () => { if (document.hidden) this.pause(); });
     window.addEventListener('pagehide', () => this.pause());
   }
@@ -35,7 +35,7 @@ export class MusicPlayer {
             onReady: () => {
               clearTimeout(timeout); this.ready = true;
               this.instance.getIframe().title = 'Creators of Fire — official YouTube video player';
-              this.instance.setVolume(this.volume); this.callbacks.onReady(); resolve();
+              this.applyVolume(); this.callbacks.onReady(); resolve();
             },
             onStateChange: ({ data }) => {
               this.state = data;
@@ -66,7 +66,9 @@ export class MusicPlayer {
   play() { if (this.ready && !document.hidden) this.instance.playVideo(); }
   pause() { if (this.ready) this.instance.pauseVideo(); }
   seek(time) { if (this.ready) this.instance.seekTo(time, true); }
-  setVolume(value) { this.volume = value; if (this.ready) this.instance.setVolume(value); }
+  applyVolume() { if (this.ready) this.instance.setVolume(Math.round(this.volume * this.transitionGain)); }
+  setVolume(value) { this.volume = value; this.applyVolume(); }
+  setTransitionGain(gain) { this.transitionGain = Math.max(0, Math.min(1, gain)); this.applyVolume(); }
   get time() { return this.ready ? this.instance.getCurrentTime() || 0 : 0; }
   get duration() { return this.ready ? this.instance.getDuration() || 0 : 0; }
 }

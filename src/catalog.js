@@ -3,6 +3,18 @@ export function formatTime(seconds) {
   const s = Math.floor(seconds);
   return s >= 3600 ? `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
+export function formatPublished(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}T/.test(value)) return 'Date unavailable';
+  // Keep the calendar day supplied by YouTube, even when its timestamp has a US offset.
+  const date = new Date(`${value.slice(0, 10)}T00:00:00Z`);
+  return Number.isNaN(date.getTime()) ? 'Date unavailable' : new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' }).format(date);
+}
+export function isNewRelease(value, now = Date.now()) {
+  if (typeof value !== 'string') return false;
+  const published = new Date(value).getTime();
+  const age = now - published;
+  return Number.isFinite(published) && age >= 0 && age < 14 * 24 * 60 * 60 * 1000;
+}
 // Editorial browsing labels, inferred only from explicit words in the published title.
 export function category(title) {
   if (/drum\s*(and|&)\s*bass|\bdnb\b/i.test(title)) return 'Drum & bass';
