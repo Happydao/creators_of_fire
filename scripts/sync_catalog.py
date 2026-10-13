@@ -22,17 +22,22 @@ NS = {'a': 'http://www.w3.org/2005/Atom', 'yt': 'http://www.youtube.com/xml/sche
 NOW = dt.datetime.now(dt.timezone.utc)
 STAMP = NOW.isoformat()
 
-def request(url):
-    for attempt in range(3):
+def request(url, retry_missing=False):
+    retryable = {429, 500, 502, 503, 504}
+    # The public upload feed occasionally returns a temporary 403/404 even
+    # while the channel exists. A missing oEmbed video, however, is final.
+    if retry_missing:
+        retryable.update((403, 404))
+    for attempt in range(5):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': 'CreatorsOfFire-CatalogSync/1.0'})
             with urllib.request.urlopen(req, timeout=30) as response:
                 return response.read()
         except urllib.error.HTTPError as error:
-            if error.code not in (429, 500, 502, 503, 504) or attempt == 2:
+            if error.code not in retryable or attempt == 4:
                 raise
         except (urllib.error.URLError, TimeoutError):
-            if attempt == 2:
+            if attempt == 4:
                 raise
         time.sleep(2 ** attempt)
 
@@ -76,7 +81,7 @@ def api_catalog(key):
     return [videos[i] for i in dict.fromkeys(ids) if i in videos]
 
 def rss_catalog(existing):
-    root = ET.fromstring(request(f'https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL}'))
+    root = ET.fromstring(request(f'https://www.youtube.com/feeds/videos.xml?channel_id={CHANNEL}', retry_missing=True))
     if root.findtext('yt:channelId', namespaces=NS) not in (CHANNEL, CHANNEL[2:]):
         raise ValueError('Feed does not belong to the configured artist')
     old = {item['id']: item for item in existing}
@@ -84,10 +89,11 @@ def rss_catalog(existing):
     for entry in root.findall('a:entry', NS):
         video_id = entry.findtext('yt:videoId', namespaces=NS)
         title = entry.findtext('a:title', namespaces=NS)
-        item = track(video_id, title, publishedAt=entry.findtext('a:published', namespaces=NS), verifiedAt=STAMP)
-        # Preserve durations obtained from the bootstrap/API; RSS does not supply duration.
-        if video_id in old and 'duration' in old[video_id]:
-            item['duration'] = old[video_id]['duration']
+        item = {**old.get(video_id, {}), **track(video_id, title, publishedAt=entry.findtext('a:published', namespaces=NS))}
+        # Preserve stable metadata so an unchanged feed does not create a
+        # commit/deployment every time the scheduled job runs.
+        if video_id not in old or (old[video_id].get('title'), old[video_id].get('publishedAt')) != (item['title'], item['publishedAt']):
+            item['verifiedAt'] = STAMP
         fresh.append(item)
     if not fresh:
         raise ValueError('Feed returned no uploads; preserving existing catalog')
@@ -119,6 +125,9 @@ def main():
     result = api_catalog(key) if key else rss_catalog(existing['tracks'])
     if not result or len({t['id'] for t in result}) != len(result):
         raise ValueError('Empty or duplicate catalog; refusing to overwrite')
+    if result == existing['tracks']:
+        print(f'Catalog unchanged: {len(result)} tracks.')
+        return
     document = {'channelId': CHANNEL, 'updatedAt': STAMP, 'source': 'YouTube Data API v3' if key else 'YouTube Atom feed + oEmbed verification', 'tracks': result}
     temporary = path.with_suffix('.tmp')
     temporary.write_text(json.dumps(document, ensure_ascii=False, indent=2) + '\n')
@@ -130,5 +139,6 @@ if __name__ == '__main__':
         main()
     except Exception as error:
         # urllib exceptions can include URLs containing API keys. Never print them.
-        print(f'Catalog synchronization failed ({type(error).__name__}). Existing catalog preserved. Check feed availability or API secret/quota.', file=sys.stderr)
+        detail = f' HTTP {error.code}' if isinstance(error, urllib.error.HTTPError) else ''
+        print(f'Catalog synchronization failed ({type(error).__name__}{detail}). Existing catalog preserved. Check feed availability or API secret/quota.', file=sys.stderr)
         sys.exit(1)

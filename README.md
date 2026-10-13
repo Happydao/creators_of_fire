@@ -63,7 +63,7 @@ If branch protection prevents the bot's catalog commit, adapt that step to open 
 
 ## Automatic YouTube synchronization
 
-The workflow runs **every six hours**, at minute 23. It can also be run from **Actions → Sync catalog & deploy Pages → Run workflow**.
+The workflow is scheduled **every two hours**, at minute 23 UTC. GitHub may delay or occasionally skip scheduled runs; the job retries a failed sync up to three times, one minute apart. It can also be run from **Actions → Sync catalog & deploy Pages → Run workflow**. An unchanged feed leaves `data/catalog.json` untouched, avoiding unnecessary bot commits.
 
 ### Default: no key required
 
