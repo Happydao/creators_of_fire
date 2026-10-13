@@ -218,8 +218,8 @@ async function initialize() {
     const response = await fetch(new URL('../data/platforms.json', import.meta.url));
     if (!response.ok) return;
     const platforms = await response.json();
-    const allowed = new Set(['spotify', 'applemusic', 'amazonmusic', 'youtubemusic', 'deezer', 'tidal']);
-    $('#platforms').innerHTML = platforms.filter(p => allowed.has(p.icon)).map(p => `<div class="stream-tile"><span class="stream-icon"><img src="./assets/platforms/${p.icon}.svg" alt="" width="48" height="48"></span><strong>${escape(p.name)}</strong></div>`).join('');
+    const allowed = new Set(['spotify', 'applemusic', 'amazonmusic', 'youtubemusic', 'deezer', 'tidal', 'nearfm']);
+    $('#platforms').innerHTML = platforms.filter(p => allowed.has(p.icon)).map(p => `<div class="stream-tile${p.icon === 'nearfm' ? ' stream-tile--nearfm' : ''}"><span class="stream-icon"><img src="./assets/platforms/${p.icon}.${p.format === 'png' ? 'png' : 'svg'}" alt="" width="48" height="48"></span><strong>${escape(p.name)}</strong></div>`).join('');
   } catch { /* Keep the static platform preview if the data file is unavailable. */ }
 }
 initialize();

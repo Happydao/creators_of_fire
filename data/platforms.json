@@ -4,5 +4,6 @@
   {"name":"Amazon Music","icon":"amazonmusic","verified":false},
   {"name":"YouTube Music","icon":"youtubemusic","verified":false},
   {"name":"Deezer","icon":"deezer","verified":false},
-  {"name":"TIDAL","icon":"tidal","verified":false}
+  {"name":"TIDAL","icon":"tidal","verified":false},
+  {"name":"near.fm","icon":"nearfm","format":"png","verified":false,"evidence":"Platform presence supplied by the project owner; logo from the official near.fm website"}
 ]

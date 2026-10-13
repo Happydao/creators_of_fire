@@ -34,7 +34,7 @@ A static HTML/CSS/ES-module site, without a frontend framework, paid backend, or
 | `src/catalog.js` | Catalog validation, filtering, queue boundaries, shuffle |
 | `data/catalog.json` | Generated track metadata; actual media remains on YouTube |
 | `data/artist.json` | Verified channel identity and artwork references |
-| `data/platforms.json` | Six visual streaming-presence tiles and separately recorded verification evidence |
+| `data/platforms.json` | Seven visual streaming-presence tiles and separately recorded verification evidence |
 | `src/mix.js` | Duration-based, interior Fire Mix preview selection |
 | `src/share.js` | Native sharing, accessible desktop fallback, and track sharing |
 | `src/form-config.js` | Inspected Italian Google Form schema and English-to-Italian option mapping |
@@ -105,7 +105,7 @@ Playback uses the supported [YouTube IFrame Player API](https://developers.googl
 
 ## Streaming presence
 
-The six prominent tiles are Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, and TIDAL. They are all **visual, non-clickable** marks at the owner's request, communicating the broader distribution ecosystem; availability can vary by release and region. `data/platforms.json` retains separately verified Spotify and Apple Music URLs for maintainers, but the section does not turn them into profile links or generic searches.
+The seven prominent tiles are Spotify, Apple Music, Amazon Music, YouTube Music, Deezer, TIDAL, and near.fm. They are all **visual, non-clickable** marks at the owner's request, communicating the broader distribution ecosystem; availability can vary by release and region. The owner confirmed Creators of Fire publishes on near.fm. `data/platforms.json` retains separately verified Spotify and Apple Music URLs for maintainers, but the section does not turn them into profile links or generic searches.
 
 Platform icons live in `assets/platforms/`; see attribution below. An artist-owned profile cross-link or multiple uniquely matching releases are useful evidence for future links.
 
@@ -137,4 +137,4 @@ Node tests cover catalog integrity, no-repeat shuffle, queue boundaries, search/
 
 ## Rights and attribution
 
-Artist artwork comes from the user-specified official channel and is used for this artist website at the project owner's request. Track thumbnails remain hosted by YouTube and videos retain their original titles and attribution. No rights to third-party material appearing in videos are asserted. Platform SVG marks come from [Simple Icons](https://simpleicons.org/) (CC0); names and marks belong to their respective owners. Barlow Condensed and DM Sans are self-hosted under their included SIL Open Font Licenses in `assets/fonts/`.
+Artist artwork comes from the user-specified official channel and is used for this artist website at the project owner's request. Track thumbnails remain hosted by YouTube and videos retain their original titles and attribution. No rights to third-party material appearing in videos are asserted. The six platform SVG marks come from [Simple Icons](https://simpleicons.org/) (CC0); the near.fm mark is from [near.fm's official website](https://near.fm/). Names and marks belong to their respective owners. Barlow Condensed and DM Sans are self-hosted under their included SIL Open Font Licenses in `assets/fonts/`.
