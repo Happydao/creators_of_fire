@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-10-13T14:24:56.348848+00:00",
+  "updatedAt": "2026-10-13T21:21:38.643041+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "xooojfXHZQg",
+      "title": "\"DEMON MANSHION\" - Dubstep music",
+      "thumbnail": "https://i.ytimg.com/vi/xooojfXHZQg/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=xooojfXHZQg",
+      "publishedAt": "2026-10-13T19:55:08+00:00",
+      "verifiedAt": "2026-10-13T21:21:38.643041+00:00"
+    },
     {
       "id": "efzfHZMV_6k",
       "title": "\"BRUH PULSE\" - Goofy Music",
