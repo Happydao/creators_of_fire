@@ -7,6 +7,6 @@ await rm('dist', { recursive: true, force: true });
 await mkdir('dist', { recursive: true });
 for (const name of ['index.html', 'privacy.html', 'src', 'assets', 'data']) await cp(name, `dist/${name}`, { recursive: true });
 await writeFile('dist/.nojekyll', '');
-await writeFile('dist/404.html', '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Frequency not found — Creators of Fire</title><style>body{background:#0b0b0d;color:#eee;font:18px sans-serif;padding:12vw}a{color:#ff662f}</style><h1>Frequency not found.</h1><p>Let’s get you back to the music.</p><a href="/creators_of_fire/">Return to Creators of Fire →</a></html>');
-await writeFile('dist/sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://happydao.github.io/creators_of_fire/</loc></url></urlset>');
+await writeFile('dist/404.html', '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Frequency not found — Creators of Fire</title><style>body{background:#0b0b0d;color:#eee;font:18px sans-serif;padding:12vw}a{color:#ff662f}</style><h1>Frequency not found.</h1><p>Let’s get you back to the music.</p><a href="/">Return to Creators of Fire →</a></html>');
+await writeFile('dist/sitemap.xml', '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://creatorsoffire.com/</loc></url></urlset>');
 console.log(`Built GitHub Pages site with ${catalog.tracks.length} verified tracks. All app assets use relative paths.`);

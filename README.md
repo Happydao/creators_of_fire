@@ -2,7 +2,7 @@
 
 The official artist experience for [Creators of Fire / @AISoundCF](https://www.youtube.com/@AISoundCF).
 
-**Website:** https://happydao.github.io/creators_of_fire/
+**Website:** https://creatorsoffire.com/
 
 Dark editorial design built around the artist's original hooded creator/robot artwork. Includes the verified 121-video launch catalog, a visible YouTube player, Fire Shuffle, 30-second Fire Mix, queue, progress, volume, repeat, search, editorial genre filters, grid/list views, locally saved favorites, sharing, and an on-site track request form. The queue normally follows newest uploads first; Shuffle changes its order. A **NEW RELEASE** badge appears for uploads less than 14 days old.
 
@@ -46,14 +46,16 @@ A static HTML/CSS/ES-module site, without a frontend framework, paid backend, or
 | `privacy.html` | YouTube disclosures and local-preference deletion |
 | `docs/research.md` | Source provenance, platform verification and design decisions |
 
-`data/artist.json` is an identity reference for maintainers, not a runtime content CMS. Edit the static artist copy/SEO in `index.html` when changing identity information. All CSS, JavaScript, JSON, and asset URLs are relative; the canonical URL, sitemap, 404 return link and Open Graph URL explicitly target this repository's Pages URL.
+`data/artist.json` is an identity reference for maintainers, not a runtime content CMS. Edit the static artist copy/SEO in `index.html` when changing identity information. All CSS, JavaScript, JSON, and asset URLs are relative; the canonical URL, sitemap, 404 return link, share URL and Open Graph image target the custom domain. The GitHub Pages project URL redirects to that domain once GitHub activates it.
 
 ## GitHub Pages deployment
 
 1. Push to the repository's `main` branch.
 2. In **Settings → Pages → Build and deployment**, select **GitHub Actions**.
 3. The **Sync catalog & deploy Pages** workflow validates, builds, uploads `dist`, and deploys.
-4. Visit https://happydao.github.io/creators_of_fire/.
+4. Set **Settings → Pages → Custom domain** to `creatorsoffire.com`. This Actions-based deployment does not use a `CNAME` file.
+5. At Spaceship, create an apex `A` record (`@`) pointing to `185.199.108.153`. GitHub also publishes `185.199.109.153`, `185.199.110.153`, and `185.199.111.153` for additional redundancy; Spaceship currently flags multiple apex `A` records as conflicts, so the verified minimum of one is used. Create `www` as a `CNAME` pointing directly to `happydao.github.io` (without `/creators_of_fire/`). Remove conflicting parking records if present. Do not add wildcard records.
+6. Wait for GitHub's DNS check and certificate provisioning, then enable **Enforce HTTPS** in Pages settings. Visit https://creatorsoffire.com/ and https://www.creatorsoffire.com/; GitHub redirects the `www` variant to the configured apex domain.
 
 The workflow uses the built-in `GITHUB_TOKEN` with narrowly scoped job permissions. No deployment token is needed. An initial push deploys the committed catalog even without an API key. Scheduled and manually dispatched runs synchronize first, then deploy in the same workflow; this avoids the limitation that bot commits do not recursively trigger another workflow. Concurrent runs are serialized. A sync failure fails the workflow and preserves the last deployed site and catalog.
 

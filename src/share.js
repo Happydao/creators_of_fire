@@ -1,4 +1,4 @@
-const SITE_URL = 'https://happydao.github.io/creators_of_fire/';
+const SITE_URL = 'https://creatorsoffire.com/';
 const dialog = document.querySelector('#share-dialog');
 const status = document.querySelector('#share-status');
 let shareData = { title: 'Creators of Fire — AI Music', text: 'Discover Creators of Fire — AI Music 🔥', url: SITE_URL };
