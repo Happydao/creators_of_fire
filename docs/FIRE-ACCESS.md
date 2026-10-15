@@ -149,12 +149,23 @@ Wallet Selector/Meteor sono fissati a 10.1.4. Due override risolvono avvisi nell
 
 I nuovi campi editoriali sono centralizzati nell'oggetto `FIRE_TOKEN_INFORMATION` di `fire/config.js`:
 
-- `nearlyTradeUrl`: URL HTTPS esatto della pagina ufficiale del token su Nearly.trade. Vuoto = GET $FIRE / COMING SOON disabilitato. Nessun link generico viene generato.
+- `nearlyTradeUrl`: URL HTTPS esatto della pagina ufficiale del token su Nearly.trade. Vuoto = GET $FIRE / COMING SOON disabilitato. Il solo URL non abilita il collegamento. Nessun link generico viene generato.
 - `explorerUrl`: URL HTTPS esatto della pagina del contratto sull'explorer NEAR scelto. Il link viene attivato solo quando il servizio accessi restituisce anche un contratto configurato.
 - `fees`: `buyTax`, `sellTax`, `burnAllocation`, `creatorFees`, `platformFees`. Sono stringhe per riportare fedelmente le condizioni reali, anche articolate; vuoto = Not configured. Non inserire percentuali ipotetiche.
 
 **Contratto e soglia non sono duplicati nel frontend:** restano nei campi esistenti `FIRE_CONTRACT` e `MINIMUM_FIRE` di `workers/fire-access/wrangler.jsonc`, descritti sopra. La pagina utilizza la risposta `/status` già richiesta dal flusso esistente per mostrarli anche prima dell'attivazione delle playlist. Nessuna chiamata aggiuntiva, modifica al Worker o modifica alla verifica del wallet è stata introdotta per queste informazioni. Questa separazione conserva l'unica fonte autorevole dei parametri di accesso: le informazioni pubbliche non possono cambiare la soglia verificata.
 
-Se l'URL Worker non è impostato o il servizio non risponde, il contratto resta Coming soon e la soglia Not configured. COPY CONTRACT e VIEW ON EXPLORER rimangono disabilitati. La copia dà un riscontro accessibile; se il browser rifiuta l'accesso agli appunti, seleziona l'indirizzo per la copia manuale. I link esterni aprono una nuova scheda con `noopener noreferrer`.
+Se l'URL Worker non è impostato o il servizio non risponde, il contratto resta Coming soon e la soglia Coming soon. COPY CONTRACT e VIEW ON EXPLORER rimangono disabilitati. La copia dà un riscontro accessibile; se il browser rifiuta l'accesso agli appunti, seleziona l'indirizzo per la copia manuale. I link esterni aprono una nuova scheda con `noopener noreferrer`.
 
 Il testo IMPORTANT INFORMATION è quello richiesto dal proprietario; non è una certificazione o una garanzia di conformità normativa. La sezione Trading indica sedi previste, senza asserire che il token sia già disponibile.
+
+
+## Revisione finale dei testi e rilascio esplicito
+
+In `fire/config.js`, `FIRE_TOKEN_INFORMATION.serviceLive` resta `false` finché il servizio non è stato provato realmente. Il testo post-lancio compare soltanto con questo flag a `true`, un contratto valido restituito dal servizio e `/status.ready === true`. La sola configurazione del Worker non dimostra che il servizio sia operativo. Il flag è editoriale e non cambia la verifica del wallet.
+
+`FIRE_TOKEN_INFORMATION.tradingEnabled` è separato e rimane `false`: il proprietario potrà abilitarlo esplicitamente dopo la verifica degli obblighi normativi applicabili. GET $FIRE diventa un link solo quando sono presenti anche le condizioni operative precedenti e un URL HTTPS ufficiale Nearly.trade. Questo interruttore non certifica alcuna conformità. Non sono state fatte valutazioni legali sull'offerta reale, ancora futura.
+
+Contratto e soglia mancanti mostrano Coming soon. Le commissioni mancanti continuano a mostrare Not configured, senza percentuali presunte. Il disclaimer chiarisce che non è garantita una frequenza delle nuove uscite, mantenendo le informazioni sull'accesso ai contenuti disponibili e sui rischi.
+
+Riferimento consultato per evitare affermazioni improprie: [Regolamento UE 2023/1114, testo ufficiale EUR-Lex](https://eur-lex.europa.eu/legal-content/IT-EN/TXT/?uri=CELEX%3A32023R1114). Nessuna approvazione, certificazione o conformità normativa viene dichiarata dalla pagina.

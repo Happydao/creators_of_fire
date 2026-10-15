@@ -5,22 +5,48 @@ test('unconfigured token displays all information without actionable token links
   await expect(page.locator('#get-fire')).toContainText('COMING SOON');
   await expect(page.locator('#get-fire')).not.toHaveAttribute('href');
   await expect(page.locator('#token-contract')).toHaveText('Coming soon.');
+  await expect(page.locator('#token-minimum')).toHaveText('Coming soon.');
+  await expect(page.locator('#token-description')).toContainText('planned music community token');
   await expect(page.locator('#copy-contract')).toBeDisabled();
   await expect(page.locator('#token-explorer')).not.toHaveAttribute('href');
   await expect(page.locator('[data-fee]')).toHaveText(Array(5).fill('Not configured'));
-  await expect(page.locator('.token-disclosure p')).toHaveCount(6);
+  await expect(page.locator('.token-disclosure p')).toHaveCount(7);
   await expect(page.locator('.exclusive-card')).toHaveCount(3);
   await expect(page.locator('iframe')).toHaveCount(0);
 });
 
-async function configure(page, nearlyTradeUrl = 'https://nearly.trade/test-only-token') {
+test('launch wording and trading require separate explicit release flags', async ({ page }) => {
+  for (const settings of [{}, { serviceLive: true }, { tradingEnabled: true }]) {
+    await configure(page, 'https://nearly.trade/test-only-token', settings, { ready: true });
+    await expect(page.locator('#get-fire')).not.toHaveAttribute('href');
+    await expect(page.locator('#token-description')).toContainText(settings.serviceLive ? 'music community utility token on NEAR Protocol' : 'planned music community token');
+  }
+  await configure(page, 'https://nearly.trade/test-only-token', { serviceLive: true, tradingEnabled: true }, { ready: true });
+  await expect(page.locator('#get-fire')).toHaveAttribute('href', 'https://nearly.trade/test-only-token');
+  await expect(page.locator('#get-fire')).toHaveAttribute('target', '_blank');
+  await expect(page.locator('#token-disclosure-intro')).not.toContainText('planned');
+});
+
+test('invalid contract or nonoperational service never enables trading', async ({ page }) => {
+  for (const status of [{ contract: 'INVALID/CONTRACT', ready: true }, { contract: '', ready: true }, { ready: false }]) {
+    await configure(page, 'https://nearly.trade/test-only-token', { serviceLive: true, tradingEnabled: true }, status);
+    await expect(page.locator('#get-fire')).not.toHaveAttribute('href');
+    await expect(page.locator('#token-description')).toContainText('planned music community token');
+    if ('contract' in status) {
+      await expect(page.locator('#copy-contract')).toBeDisabled();
+      await expect(page.locator('#token-explorer')).not.toHaveAttribute('href');
+    }
+  }
+});
+
+async function configure(page, nearlyTradeUrl = 'https://nearly.trade/test-only-token', settings = {}, status = {}) {
   await page.route('**/fire/config.js', route => route.fulfill({ contentType: 'application/javascript', body: `
     export const FIRE_WORKER_URL = 'https://token-test.invalid';
-    export const FIRE_TOKEN_INFORMATION = ${JSON.stringify({ nearlyTradeUrl, explorerUrl: 'https://explorer.test.invalid/account/fixture.testnet', fees: { buyTax: 'Test terms', sellTax: '', creatorFees: '0%' } })};
+    export const FIRE_TOKEN_INFORMATION = ${JSON.stringify({ ...settings, nearlyTradeUrl, explorerUrl: 'https://explorer.test.invalid/account/fixture.testnet', fees: { buyTax: 'Test terms', sellTax: '', creatorFees: '0%' } })};
   ` }));
-  await page.route('https://token-test.invalid/status', route => route.fulfill({ contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ ready: false, network: 'testnet', contract: 'a'.repeat(56) + '.testnet', minimum: '100' }) }));
+  await page.route('https://token-test.invalid/status', route => route.fulfill({ contentType: 'application/json', headers: { 'Access-Control-Allow-Origin': '*' }, body: JSON.stringify({ ready: false, network: 'testnet', contract: 'a'.repeat(56) + '.testnet', minimum: '100', ...status }) }));
   await page.goto('/fire/');
-  await expect(page.locator('#copy-contract')).toBeEnabled();
+  await expect(page.locator('#access-status')).toContainText(status.ready ? 'Hold at least' : 'still being prepared');
 }
 
 test('configured metadata uses the existing status, supports copying and remains responsive', async ({ page }) => {
@@ -28,7 +54,7 @@ test('configured metadata uses the existing status, supports copying and remains
     Object.defineProperty(navigator, 'clipboard', { value: { writeText: async text => { window.copiedContract = text; } } });
   });
   await configure(page);
-  await expect(page.locator('#get-fire')).toHaveAttribute('href', 'https://nearly.trade/test-only-token');
+  await expect(page.locator('#get-fire')).not.toHaveAttribute('href');
   await expect(page.locator('#get-fire')).toHaveAttribute('target', '_blank');
   await expect(page.locator('#get-fire')).toHaveAttribute('rel', 'noopener noreferrer');
   await expect(page.locator('#token-explorer')).toHaveAttribute('href', 'https://explorer.test.invalid/account/fixture.testnet');
