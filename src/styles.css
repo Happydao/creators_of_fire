@@ -120,6 +120,12 @@ footer button{color:inherit;font-size:inherit;padding:0}
 .request-section h2 span,.request-modal-head h2 span{color:var(--fire)}
 .request-section p{max-width:525px;color:#bfb0a6;font-size:13px;line-height:1.75}
 .request-cta{white-space:nowrap;padding:15px 24px}
+.create-access-actions{display:flex;flex-direction:column;gap:12px;max-width:100%;flex-shrink:0}
+.create-access-actions .button{justify-content:center;white-space:normal;text-align:center;min-height:48px}
+.create-access-actions small{color:#bfb0a6;font-size:11px;max-width:320px;line-height:1.6}
+.fire-access-cta{border:1px solid #80503a;background:linear-gradient(120deg,#29160f,#141113);color:#ffbd94}
+@media(max-width:1000px){.request-section-inner{flex-wrap:wrap}.create-access-actions{flex-shrink:1}}
+@media(max-width:540px){.create-access-actions{width:100%}.create-access-actions small{font-size:12px}}
 /* Native dialog elements provide modal focus containment and Escape handling. */
 .share-dialog,.request-dialog{background:linear-gradient(145deg,#211c1d,#101013 75%);color:var(--text);border:1px solid #664333;border-radius:16px;box-shadow:0 35px 100px #000c,inset 0 1px 0 #ffffff17}
 .share-dialog::backdrop,.request-dialog::backdrop{background:#050405d9;backdrop-filter:blur(10px)}
