@@ -1,4 +1,5 @@
 import { FIRE_WORKER_URL } from './config.js';
+import { showTokenAccessInformation } from './token-information.js';
 import { decryptJSON, fromBase64, toBase64, validPlaylists } from './crypto.js';
 
 const $ = selector => document.querySelector(selector);
@@ -162,6 +163,7 @@ async function initialize() {
     endpoint = url.origin;
     status.textContent = 'Checking FIRE access availability…';
     config = await request('/status');
+    showTokenAccessInformation(config);
     if (!config.ready) { status.textContent = errorMessages.PREPARING; return; }
     if (!['mainnet', 'testnet'].includes(config.network)) throw new Error('Invalid network');
     connect.disabled = false;

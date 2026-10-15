@@ -28,7 +28,9 @@
         <p id="access-status" role="status" aria-live="polite">FIRE access is being prepared. The token is not live yet. Exclusive content remains locked.</p>
         <dl id="wallet-details" hidden><div><dt>Wallet</dt><dd id="wallet-account"></dd></div><div><dt>Your FIRE balance</dt><dd id="wallet-balance"></dd></div><div><dt>Access expires</dt><dd id="wallet-expiry">—</dd></div></dl>
         <button id="connect-wallet" type="button" class="button primary" disabled>CONNECT NEAR WALLET <span aria-hidden="true">↗</span></button>
+        <a id="get-fire" class="button secondary token-get" role="link" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">🔥 GET $FIRE — COMING SOON</a>
         <button id="disconnect-wallet" type="button" class="disconnect-button" hidden>Disconnect &amp; lock content</button>
+        <p class="token-access-note">FIRE unlocks exclusive music experiences. No tokens are spent to access content.</p>
         <p class="access-assurance">Message signature only.<br>No payments. No token transfers.</p>
         <a class="access-help" href="#how-access-works">How access works ↓</a>
       </aside>
@@ -41,7 +43,40 @@
         <article class="exclusive-card" data-section="early"><div class="card-art art-early"><span class="art-number" aria-hidden="true">03</span><div class="art-orbit" aria-hidden="true"></div><div class="lock-overlay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M7 10V7a5 5 0 0 1 10 0v3M6 10h12v11H6zM12 14v3"/></svg><span>FIRE HOLDERS ONLY</span></div></div><div class="playlist-player" hidden></div><div class="exclusive-card-copy"><div class="card-kicker">03 / BEFORE THE RELEASE</div><h3>EARLY ACCESS</h3><p>Listen to selected upcoming releases before their official launch.</p><p class="locked-message">Hold FIRE in your NEAR wallet to unlock exclusive content.</p></div></article>
       </div>
     </section>
+    <section class="token-information" aria-labelledby="token-title">
+      <div class="token-panel">
+        <div class="token-heading"><div><div class="eyebrow orange">THE TOKEN / THE COMMUNITY</div><h2 id="token-title">ABOUT <span>$FIRE</span></h2><p>The Creators of Fire music community utility token.</p></div><span class="token-emblem" aria-hidden="true">$F</span></div>
+        <div class="token-columns">
+          <div><dl class="token-facts">
+            <div><dt>Token</dt><dd>FIRE</dd></div>
+            <div><dt>Project</dt><dd>Creators of Fire</dd></div>
+            <div><dt>Blockchain</dt><dd>NEAR Protocol</dd></div>
+            <div><dt>Purpose</dt><dd>Access to exclusive music content.</dd></div>
+            <div><dt>Access</dt><dd>Token ownership verification.</dd></div>
+            <div><dt>Token spending</dt><dd>Not required.</dd></div>
+            <div><dt>Minimum holding</dt><dd id="token-minimum">Not configured</dd></div>
+            <div><dt>Trading</dt><dd>Nearly.trade / Rhea Finance.<small>Planned venues. Official token links will be added after launch.</small></dd></div>
+          </dl>
+          <div class="token-contract-block"><h3>Contract</h3><p id="token-contract">Coming soon.</p><div class="token-contract-actions"><button id="copy-contract" type="button" class="button secondary" disabled>COPY CONTRACT</button><a id="token-explorer" class="button secondary" role="link" aria-disabled="true" tabindex="-1" target="_blank" rel="noopener noreferrer">VIEW ON EXPLORER ↗</a></div><p id="contract-feedback" role="status" aria-live="polite"></p></div></div>
+          <aside class="token-fees" aria-labelledby="fees-title"><div class="eyebrow orange">TRANSPARENT BY DESIGN</div><h3 id="fees-title">TOKEN FEES</h3><p>Terms will be published after token creation, based on the actual smart contract and platform conditions.</p><dl class="token-facts">
+            <div><dt>Buy tax</dt><dd data-fee="buyTax">Not configured</dd></div>
+            <div><dt>Sell tax</dt><dd data-fee="sellTax">Not configured</dd></div>
+            <div><dt>Burn allocation</dt><dd data-fee="burnAllocation">Not configured</dd></div>
+            <div><dt>Creator fees</dt><dd data-fee="creatorFees">Not configured</dd></div>
+            <div><dt>Platform/protocol fees</dt><dd data-fee="platformFees">Not configured</dd></div>
+          </dl></aside>
+        </div>
+      </div>
+    </section>
     <section id="how-access-works" class="access-explainer" aria-labelledby="how-title"><div><div class="eyebrow orange">KEEP THE MUSIC CLOSE</div><h2 id="how-title">YOUR WALLET.<br><span>YOUR ACCESS.</span></h2><p>Exclusive listening is an addition to the music you already love. The public catalog and free track requests stay open to everyone.</p><a href="../#create">Have an idea? Request your track →</a></div><ol><li><span>01</span><div><h3>Connect with Meteor</h3><p>Choose your NEAR account and approve a message signature. We never ask for your recovery phrase or a transaction.</p></div></li><li><span>02</span><div><h3>Verify your FIRE balance</h3><p>Your balance is checked on NEAR. The required amount will be displayed here when access launches.</p></div></li><li><span>03</span><div><h3>Step inside the sound</h3><p>Eligible wallets unlock all three playlists for a temporary listening session. Renew access when it expires.</p></div></li></ol></section>
+    <section class="token-disclosure" aria-labelledby="important-title"><h2 id="important-title">IMPORTANT INFORMATION</h2><div>
+      <p>FIRE is a community utility token associated with the Creators of Fire music project on NEAR Protocol.</p>
+      <p>Holding FIRE provides access to selected exclusive music content when the service is active. Tokens are not transferred or spent to access these features.</p>
+      <p>FIRE does not grant ownership rights, dividends, profit-sharing rights, or guaranteed financial returns.</p>
+      <p>Crypto-assets involve risks. The market value of FIRE may fluctuate significantly, and holders may lose the entire amount spent acquiring the token.</p>
+      <p>FIRE is not presented as an investment product. Participation is voluntary, and the regular Creators of Fire music experience remains accessible without holding tokens.</p>
+      <p>Trading crypto-assets may be subject to legal and age restrictions. Users should review the applicable rules before participating.</p>
+    </div></section>
     <noscript><p class="no-script">JavaScript is required to verify wallet access. The public music catalog is available on the homepage.</p></noscript>
   </main>
   <footer class="fire-footer"><a href="../">CREATORS OF FIRE <span> / AI MUSIC</span></a><a href="../privacy.html">Privacy &amp; playback</a><span>FIRE EXCLUSIVE / ON NEAR</span></footer>
