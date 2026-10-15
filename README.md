@@ -8,9 +8,10 @@ Dark editorial design built around the artist's original hooded creator/robot ar
 
 ## Local development
 
-Requires Node.js 22+; Python 3.9+ is needed only for catalog synchronization. No npm dependencies or install step.
+Requires Node.js 22+; Python 3.9+ is needed only for catalog synchronization. Run `npm ci` once to install the pinned build and wallet dependencies.
 
 ```sh
+npm ci
 npm run dev
 # http://127.0.0.1:4173/creators_of_fire/
 npm test
@@ -102,6 +103,10 @@ Playback uses the supported [YouTube IFrame Player API](https://developers.googl
 - Autoplay blocking shows an explicit instruction to press the visible video player's Play control. Unavailable embeds display a direct YouTube fallback. Mobile OSes may reserve volume control for hardware buttons.
 - Decorative energy effects follow playback state; they are not advertised as analysis of the underlying audio.
 - The compact player has a small animated energy motif on its artwork. It runs only while the official player reports playback, pauses with playback, and becomes static under reduced-motion preferences. It is decorative, not BPM analysis or a captured audio waveform.
+
+## Fire Exclusive (local preparation)
+
+The optional `/fire/` area adds NEAR Wallet Selector + Meteor message verification and three encrypted, token-gated YouTube playlists. It is intentionally locked until the future FIRE contract, threshold, encrypted playlist bundle and Cloudflare Worker are configured. No token or playlist IDs have been invented. The free Create Your Track form is unchanged. See the complete [Italian setup, security limits and pre-launch checklist](docs/FIRE-ACCESS.md). Install build dependencies with `npm ci` before running development/build commands. No FIRE deployment has been performed.
 
 ## Streaming presence
 

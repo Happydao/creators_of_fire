@@ -1,0 +1,16 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "creators-of-fire-access",
+  "main": "index.js",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": false },
+  "vars": {
+    "NETWORK": "mainnet",
+    "FIRE_CONTRACT": "",
+    "MINIMUM_FIRE": "",
+    "ALLOWED_ORIGINS": "https://creatorsoffire.com,https://happydao.github.io",
+    "SESSION_SECONDS": "1800"
+  }
+}
