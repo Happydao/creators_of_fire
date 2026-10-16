@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { encryptJSON, toBase64 } from '../fire/crypto.js';
 
 test('preparatory page is locked, responsive and makes no third-party requests', async ({ page }, info) => {
+  await page.route('**/fire/config.js', route => route.fulfill({ contentType: 'application/javascript', body: "export const FIRE_WORKER_URL = '';" }));
   const errors = [], external = [];
   page.on('pageerror', error => errors.push(error.message));
   page.on('request', request => { if (!request.url().startsWith('http://127.0.0.1:4178')) external.push(request.url()); });

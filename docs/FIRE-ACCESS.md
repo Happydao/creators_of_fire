@@ -1,6 +1,6 @@
 # FIRE EXCLUSIVE — configurazione e verifica
 
-Implementazione locale, **non pubblicata**. Il token FIRE non è ancora disponibile: contratto, soglia, URL Worker e playlist reali sono volutamente vuoti. Nessun saldo fittizio è usato in produzione. Il sito pubblico, il player, Fire Shuffle/Mix, sincronizzazione YouTube e il modulo gratuito restano indipendenti.
+La pagina preparatoria è pubblicata. Il 16 ottobre 2026 il Worker è stato creato nell'account Cloudflare del proprietario indicato da `account_id` in Wrangler, con i due secret caricati e le tre playlist reali cifrate. Il Worker temporaneo nell'account Familyrosa è stato eliminato. URL: `https://creators-of-fire-access.creators-of-fire.workers.dev`. Il frontend usa questo URL pubblico; il rilascio avviene tramite il normale workflow GitHub Pages. Contratto e soglia restano vuoti: l'accesso è bloccato. Nessun saldo fittizio è usato in produzione. Il sito pubblico, il player, Fire Shuffle/Mix, sincronizzazione YouTube e il modulo gratuito restano indipendenti.
 
 ## Dove si trova ogni elemento
 
@@ -23,7 +23,7 @@ npm ci
 npm run dev
 ```
 
-Aprire `http://127.0.0.1:4173/creators_of_fire/fire/` (funziona anche `/fire/`). Il pulsante wallet è disabilitato finché la configurazione non è pronta. Nessuna richiesta a Cloudflare, NEAR, Meteor o YouTube parte dall'area FIRE non configurata. I link verso homepage e richiesta gratuita sono relativi e funzionano anche sotto `/creators_of_fire/`.
+Aprire `http://127.0.0.1:4173/creators_of_fire/fire/` (funziona anche `/fire/`). Il pulsante wallet è disabilitato finché la configurazione non è pronta. Con URL Worker configurato, la pagina controlla `/status` su Cloudflare. Finché il servizio non è pronto, non avvia connessioni al wallet o player YouTube. Con URL vuoto non contatta neppure Cloudflare. I link verso homepage e richiesta gratuita sono relativi e funzionano anche sotto `/creators_of_fire/`.
 
 Per controllare esattamente il sito compilato:
 
@@ -77,7 +77,7 @@ Il Worker legge i decimali da `ft_metadata`, non assume 18 o 24 decimali. Confro
 
 Non è necessario spostare i DNS da Spaceship né spostare GitHub Pages. Creare un account Cloudflare con piano Workers Free e un sottodominio gratuito `workers.dev`. Nessun binding KV, D1, R2, Durable Objects, database o storage musicale è richiesto. Non attivare Workers Paid.
 
-**I comandi di pubblicazione qui sotto sono istruzioni future, non sono stati eseguiti. Eseguirli soltanto dopo la conferma del proprietario e con la configurazione completa.**
+Il proprietario ha autorizzato la creazione del Worker e il caricamento dei secret. I comandi seguenti documentano anche le operazioni future di manutenzione: verificare sempre l'account prima di pubblicare. Il servizio può essere pubblicato in modalità preparatoria; senza contratto e soglia rifiuta ogni sblocco.
 
 ```sh
 npx wrangler login
@@ -132,7 +132,7 @@ Con Meteor verificare manualmente, su computer e telefono:
 - console senza errori e risposta Worker senza chiave permanente;
 - pagina `/fire/` e `/creators_of_fire/fire/`, homepage e modulo gratuito invariati.
 
-**Non si può dichiarare completato il test end-to-end reale oggi:** mancano contratto FIRE, playlist reali, Worker pubblicato e approvazione con un wallet del proprietario. La modalità preparatoria e i flussi simulati sono verificabili ora. Il lancio resta subordinato a questa prova.
+**Il test end-to-end reale resta da completare:** playlist cifrate e Worker sono predisposti, ma mancano contratto FIRE, soglia e prova con un wallet del proprietario. Il lancio resta subordinato a questa prova.
 
 ## Dipendenze e fonti
 

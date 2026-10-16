@@ -1,5 +1,5 @@
-// Public configuration only. Leave empty until the Worker is configured and tested.
-export const FIRE_WORKER_URL = '';
+// Public service URL. Access stays locked until the Worker reports ready.
+export const FIRE_WORKER_URL = 'https://creators-of-fire-access.creators-of-fire.workers.dev';
 
 // Public token information. Insert verified URLs/actual contract terms only.
 // Contract and access threshold are NOT duplicated here: the existing Worker

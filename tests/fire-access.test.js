@@ -12,6 +12,14 @@ import { encode, toBase64, fromBase64, encryptJSON, decryptJSON, validPlaylists 
 const origin = 'https://creatorsoffire.com';
 // Synthetic fixture IDs, never used by production or the public catalog.
 const playlists = { exclusive: 'PL_TEST_EXCLUSIVE_00000000001', alternate: 'PL_TEST_ALTERNATE_00000000002', early: 'PL_TEST_EARLY_000000000000003' };
+test('playlist validation accepts short IDs without accepting URLs or duplicate IDs', () => {
+  const short = { exclusive: 'PLabcdefghij', alternate: 'PLklmnopqrst', early: 'PLuvwxyz0123' };
+  assert.equal(validPlaylists(short), true);
+  assert.equal(validPlaylists(playlists), true);
+  assert.equal(validPlaylists({ ...short, early: short.exclusive }), false);
+  assert.equal(validPlaylists({ ...short, early: 'https://youtube.com/playlist?list=PLuvwxyz0123' }), false);
+  assert.equal(validPlaylists({ ...short, early: 'PLabc<script>' }), false);
+});
 function base58(bytes) {
   let n = BigInt('0x' + Buffer.from(bytes).toString('hex')), result = '';
   const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';

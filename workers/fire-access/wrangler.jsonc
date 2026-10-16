@@ -1,6 +1,7 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "creators-of-fire-access",
+  "account_id": "42a898dedfe3f51535285b96e347a04e",
   "main": "index.js",
   "compatibility_date": "2026-10-01",
   "workers_dev": true,

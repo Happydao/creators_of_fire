@@ -21,5 +21,6 @@ export async function decryptJSON(envelope, rawKey, context) {
 }
 export const PLAYLIST_KEYS = ['exclusive', 'alternate', 'early'];
 export function validPlaylists(value) {
-  return value && Object.keys(value).length === 3 && PLAYLIST_KEYS.every(key => typeof value[key] === 'string' && /^PL[A-Za-z0-9_-]{16,64}$/.test(value[key])) && new Set(Object.values(value)).size === 3;
+  // YouTube also issues shorter playlist IDs; retain the safe ID alphabet.
+  return value && Object.keys(value).length === 3 && PLAYLIST_KEYS.every(key => typeof value[key] === 'string' && /^PL[A-Za-z0-9_-]{10,64}$/.test(value[key])) && new Set(Object.values(value)).size === 3;
 }
