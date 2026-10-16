@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-10-13T21:21:38.643041+00:00",
+  "updatedAt": "2026-10-16T21:24:53.921330+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "TQF5yeyV4Z0",
+      "title": "\"Pleasent Chaos\" - Hard Techno",
+      "thumbnail": "https://i.ytimg.com/vi/TQF5yeyV4Z0/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=TQF5yeyV4Z0",
+      "publishedAt": "2026-10-16T20:04:48+00:00",
+      "verifiedAt": "2026-10-16T21:24:53.921330+00:00"
+    },
     {
       "id": "xooojfXHZQg",
       "title": "\"DEMON MANSHION\" - Dubstep music",
