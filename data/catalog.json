@@ -1,8 +1,24 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-10-16T21:24:53.921330+00:00",
+  "updatedAt": "2026-10-30T13:12:58.918102+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "nZQwLICTclE",
+      "title": "AURA ALARM (Instrumental Mix)",
+      "thumbnail": "https://i.ytimg.com/vi/nZQwLICTclE/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=nZQwLICTclE",
+      "publishedAt": "2026-10-30T11:42:26+00:00",
+      "verifiedAt": "2026-10-30T13:12:58.918102+00:00"
+    },
+    {
+      "id": "qQ_UOLc7JsI",
+      "title": "\"AURA ALARM\"",
+      "thumbnail": "https://i.ytimg.com/vi/qQ_UOLc7JsI/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=qQ_UOLc7JsI",
+      "publishedAt": "2026-10-30T11:35:12+00:00",
+      "verifiedAt": "2026-10-30T13:12:58.918102+00:00"
+    },
     {
       "id": "TQF5yeyV4Z0",
       "title": "\"Pleasent Chaos\" - Hard Techno",
