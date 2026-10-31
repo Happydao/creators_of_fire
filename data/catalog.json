@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-10-30T13:12:58.918102+00:00",
+  "updatedAt": "2026-10-31T12:50:16.419009+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "r97bv2dQS98",
+      "title": "\"I SAW A GHOST\" - Halloween special",
+      "thumbnail": "https://i.ytimg.com/vi/r97bv2dQS98/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=r97bv2dQS98",
+      "publishedAt": "2026-10-31T05:30:17+00:00",
+      "verifiedAt": "2026-10-31T12:50:16.419009+00:00"
+    },
     {
       "id": "nZQwLICTclE",
       "title": "AURA ALARM (Instrumental Mix)",
