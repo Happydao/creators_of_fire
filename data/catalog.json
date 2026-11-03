@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-11-02T09:40:20.060553+00:00",
+  "updatedAt": "2026-11-03T19:39:03.713080+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "qZ17D2VsQXU",
+      "title": "\"Hollow\" - Piano Tutorial (PRO ONLY)",
+      "thumbnail": "https://i.ytimg.com/vi/qZ17D2VsQXU/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=qZ17D2VsQXU",
+      "publishedAt": "2026-11-03T18:18:22+00:00",
+      "verifiedAt": "2026-11-03T19:39:03.713080+00:00"
+    },
     {
       "id": "r97bv2dQS98",
       "title": "\"I SAW A GHOST\" - Halloween special",
