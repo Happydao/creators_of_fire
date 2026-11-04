@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-11-03T19:39:03.713080+00:00",
+  "updatedAt": "2026-11-04T18:05:56.297394+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "Yoduc6EcD_Y",
+      "title": "\"Lovania\" - Piano Tutorial (PRO ONLY)",
+      "thumbnail": "https://i.ytimg.com/vi/Yoduc6EcD_Y/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=Yoduc6EcD_Y",
+      "publishedAt": "2026-11-04T11:00:31+00:00",
+      "verifiedAt": "2026-11-04T18:05:56.297394+00:00"
+    },
     {
       "id": "qZ17D2VsQXU",
       "title": "\"Hollow\" - Piano Tutorial (PRO ONLY)",
