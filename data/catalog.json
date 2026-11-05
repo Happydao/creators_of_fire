@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-11-04T18:05:56.297394+00:00",
+  "updatedAt": "2026-11-05T16:34:13.907462+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "u3gvAU9-yeY",
+      "title": "\"Malice\" - Piano Tutorial (Harder)",
+      "thumbnail": "https://i.ytimg.com/vi/u3gvAU9-yeY/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=u3gvAU9-yeY",
+      "publishedAt": "2026-11-05T13:15:30+00:00",
+      "verifiedAt": "2026-11-05T16:34:13.907462+00:00"
+    },
     {
       "id": "Yoduc6EcD_Y",
       "title": "\"Lovania\" - Piano Tutorial (PRO ONLY)",
