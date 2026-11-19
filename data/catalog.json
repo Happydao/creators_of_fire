@@ -1,8 +1,16 @@
 {
   "channelId": "UCebUIqV2bAL9L2e_apvQSFw",
-  "updatedAt": "2026-11-07T16:32:49.670926+00:00",
+  "updatedAt": "2026-11-19T00:32:48.110111+00:00",
   "source": "YouTube Atom feed + oEmbed verification",
   "tracks": [
+    {
+      "id": "h4p-VvjVATY",
+      "title": "Creators of Fire - MERCY",
+      "thumbnail": "https://i.ytimg.com/vi/h4p-VvjVATY/hqdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=h4p-VvjVATY",
+      "publishedAt": "2026-11-18T20:00:09+00:00",
+      "verifiedAt": "2026-11-19T00:32:48.110111+00:00"
+    },
     {
       "id": "u3gvAU9-yeY",
       "title": "\"Malice\" - Piano Tutorial (Harder)",
@@ -126,7 +134,7 @@
       "thumbnail": "https://i.ytimg.com/vi/Mkq7CXs9SUA/hqdefault.jpg",
       "url": "https://www.youtube.com/watch?v=Mkq7CXs9SUA",
       "publishedAt": "2026-09-01T08:48:11+00:00",
-      "verifiedAt": "2026-10-13T14:24:56.348848+00:00",
+      "verifiedAt": "2026-11-19T00:32:48.110111+00:00",
       "duration": 744
     },
     {
